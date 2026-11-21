@@ -1,0 +1,2558 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Utsav AI — Plan Your Perfect Event with AI</title>
+    <meta
+      name="description"
+      content="Plan your perfect celebration with Shubh, your AI event planner — timelines, budgets, vendors, and RSVPs in one place."
+    />
+    <meta property="og:title" content="Utsav AI — Plan Your Perfect Event with AI" />
+    <meta
+      property="og:description"
+      content="Plan your perfect celebration with Shubh, your AI event planner — timelines, budgets, vendors, and RSVPs in one place."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts: Playfair Display (headings) + Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ======================================================================
+         1. DESIGN TOKENS & BASE RESET
+         ====================================================================== */
+      :root {
+        --color-marigold: #e8a317;
+        --color-marigold-hover: #d4920e;
+        --color-marigold-text: #8c5a00; /* WCAG AA accessible on ivory/white */
+        --color-maroon: #7a1f3d;
+        --color-maroon-dark: #5c152d;
+        --color-blush: #f8e1e7;
+        --color-blush-soft: #fdf2f5;
+        --color-ivory: #fffbf5;
+        --color-surface: #ffffff;
+        --color-text: #2b2024;
+        --color-text-muted: #635258;
+        --color-border: rgba(43, 32, 36, 0.1);
+        --color-border-dashed: rgba(122, 31, 61, 0.28);
+
+        --font-display: 'Playfair Display', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+        --radius-card: 16px;
+        --radius-btn: 10px;
+        --shadow-card: 0 10px 30px -10px rgba(43, 32, 36, 0.08);
+        --shadow-card-hover: 0 18px 36px -12px rgba(122, 31, 61, 0.14);
+        --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+        --container-max: 1200px;
+        --nav-height: 72px;
+        --sidebar-width: 256px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background-color: var(--color-ivory);
+        color: var(--color-text);
+        line-height: 1.6;
+        font-size: 16px;
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: var(--font-display);
+        color: var(--color-text);
+        line-height: 1.18;
+        font-weight: 700;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: inherit;
+      }
+
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 2px solid var(--color-maroon);
+        outline-offset: 2px;
+      }
+
+      .tabular-nums {
+        font-variant-numeric: tabular-nums;
+      }
+
+      .container {
+        width: 100%;
+        max-width: var(--container-max);
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      /* View toggling utility */
+      .view-hidden {
+        display: none !important;
+      }
+
+      /* ======================================================================
+         2. SHARED BUTTONS & CARDS
+         ====================================================================== */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 10px 22px;
+        border-radius: var(--radius-btn);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition:
+          transform 180ms var(--ease-out),
+          background-color 180ms var(--ease-out),
+          border-color 180ms var(--ease-out),
+          box-shadow 180ms var(--ease-out);
+      }
+
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      .btn-primary {
+        background-color: var(--color-marigold);
+        color: var(--color-text);
+        box-shadow: 0 6px 18px -6px rgba(232, 163, 23, 0.55);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--color-marigold-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px -6px rgba(232, 163, 23, 0.65);
+      }
+
+      .btn-maroon {
+        background-color: var(--color-maroon);
+        color: #fffbf5;
+        box-shadow: 0 6px 18px -6px rgba(122, 31, 61, 0.45);
+      }
+
+      .btn-maroon:hover {
+        background-color: var(--color-maroon-dark);
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background-color: var(--color-surface);
+        color: var(--color-text);
+        border: 1px solid rgba(43, 32, 36, 0.16);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--color-maroon);
+        color: var(--color-maroon);
+        transform: translateY(-1px);
+      }
+
+      .card {
+        background-color: var(--color-surface);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card);
+        border: 1px solid rgba(43, 32, 36, 0.06);
+        transition:
+          transform 200ms var(--ease-out),
+          box-shadow 200ms var(--ease-out);
+      }
+
+      .card-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-card-hover);
+      }
+
+      /* Scroll Fade-in Animation */
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 520ms var(--ease-out),
+          transform 520ms var(--ease-out);
+      }
+
+      .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        .btn,
+        .card {
+          transition: none;
+        }
+      }
+
+      /* ======================================================================
+         3. VIEW 1 — LANDING PAGE
+         ====================================================================== */
+      /* Sticky Navbar (3-zone contract: Brand | Links | Single Primary CTA) */
+      .landing-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        height: var(--nav-height);
+        background-color: rgba(255, 251, 245, 0.92);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .nav-inner {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+      }
+
+      .brand-wordmark {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-maroon);
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+
+      .nav-link {
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        white-space: nowrap;
+        flex-shrink: 0;
+        position: relative;
+        padding: 4px 0;
+        transition: color 160ms var(--ease-out);
+      }
+
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 1.5px;
+        background-color: var(--color-maroon);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 180ms var(--ease-out);
+      }
+
+      .nav-link:hover {
+        color: var(--color-maroon);
+      }
+
+      .nav-link:hover::after {
+        transform: scaleX(1);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+      }
+
+      .hamburger-btn {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+        background: var(--color-surface);
+      }
+
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        background-color: var(--color-ivory);
+        border-bottom: 1px solid var(--color-border);
+        padding: 20px 24px 28px;
+        z-index: 49;
+        box-shadow: 0 18px 36px -12px rgba(43, 32, 36, 0.16);
+      }
+
+      .mobile-menu.is-open {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .mobile-menu a {
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 10px 4px;
+        border-bottom: 1px solid rgba(43, 32, 36, 0.06);
+      }
+
+      @media (max-width: 900px) {
+        .nav-links {
+          display: none;
+        }
+        .nav-actions .btn-desktop-cta {
+          display: none;
+        }
+        .hamburger-btn {
+          display: inline-flex;
+        }
+      }
+
+      /* Hero Section — Full Viewport with subtle floral & confetti motif */
+      .hero-section {
+        position: relative;
+        min-height: calc(100vh - var(--nav-height));
+        display: flex;
+        align-items: center;
+        padding: 56px 0 64px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 88% 18%, rgba(248, 225, 231, 0.72) 0%, transparent 42%),
+          radial-gradient(circle at 12% 82%, rgba(232, 163, 23, 0.12) 0%, transparent 38%),
+          var(--color-ivory);
+      }
+
+      .hero-motif {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .hero-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 48px;
+        align-items: center;
+      }
+
+      .hero-kicker {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-maroon);
+        letter-spacing: 0.02em;
+        margin-bottom: 14px;
+      }
+
+      .hero-headline {
+        font-size: clamp(2.35rem, 4.4vw, 3.85rem);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        max-width: 14ch;
+        text-wrap: balance;
+        margin-bottom: 20px;
+      }
+
+      .hero-headline em {
+        font-style: italic;
+        color: var(--color-maroon);
+      }
+
+      .hero-subtext {
+        font-size: 1.125rem;
+        line-height: 1.65;
+        color: var(--color-text-muted);
+        max-width: 50ch;
+        margin-bottom: 32px;
+      }
+
+      .hero-ctas {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 36px;
+      }
+
+      .hero-metrics-inline {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        font-size: 0.875rem;
+        color: var(--color-text-muted);
+      }
+
+      .hero-metrics-inline strong {
+        color: var(--color-text);
+        font-weight: 600;
+      }
+
+      /* Interactive Hero Showcase Card */
+      .hero-preview-card {
+        padding: 28px;
+        background-color: var(--color-surface);
+        border-radius: var(--radius-card);
+        box-shadow: 0 24px 48px -18px rgba(122, 31, 61, 0.16);
+        border: 1px solid rgba(122, 31, 61, 0.1);
+      }
+
+      .preview-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--color-border);
+        margin-bottom: 20px;
+      }
+
+      .preview-title {
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: 4px;
+      }
+
+      .preview-meta {
+        font-size: 0.8125rem;
+        color: var(--color-text-muted);
+      }
+
+      .preview-countdown {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        color: var(--color-maroon);
+        background-color: var(--color-blush);
+        padding: 6px 12px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+
+      .preview-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(43, 32, 36, 0.06);
+        font-size: 0.9375rem;
+      }
+
+      .preview-row:last-of-type {
+        border-bottom: none;
+      }
+
+      .preview-row-label {
+        color: var(--color-text-muted);
+      }
+
+      .preview-row-value {
+        font-weight: 600;
+        color: var(--color-text);
+      }
+
+      .preview-note {
+        margin-top: 16px;
+        padding: 14px 16px;
+        background-color: var(--color-blush-soft);
+        border-radius: 12px;
+        font-size: 0.875rem;
+        color: var(--color-text);
+        line-height: 1.5;
+      }
+
+      .preview-note strong {
+        color: var(--color-maroon);
+      }
+
+      @media (max-width: 960px) {
+        .hero-section {
+          min-height: auto;
+          padding: 40px 0 56px;
+        }
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        .hero-headline {
+          max-width: none;
+        }
+      }
+
+      /* Section Shared Layout */
+      .section {
+        padding: 88px 0;
+      }
+
+      .section-soft {
+        background-color: var(--color-blush-soft);
+        border-top: 1px solid rgba(122, 31, 61, 0.06);
+        border-bottom: 1px solid rgba(122, 31, 61, 0.06);
+      }
+
+      .section-header {
+        max-width: 660px;
+        margin-bottom: 48px;
+      }
+
+      .section-header-center {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      .section-kicker {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-maroon);
+        margin-bottom: 10px;
+      }
+
+      .section-title {
+        font-size: clamp(1.85rem, 3vw, 2.65rem);
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+        margin-bottom: 14px;
+      }
+
+      .section-desc {
+        font-size: 1.0625rem;
+        color: var(--color-text-muted);
+      }
+
+      /* Occasion / Event-Type Chips */
+      .occasions-band {
+        padding: 40px 0;
+        border-top: 1px solid var(--color-border);
+        border-bottom: 1px solid var(--color-border);
+        background-color: var(--color-surface);
+      }
+
+      .occasions-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .occasions-label {
+        font-family: var(--font-display);
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--color-text);
+      }
+
+      .chips-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .event-chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+        padding: 8px 18px;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background-color: var(--color-ivory);
+        color: var(--color-text);
+        border: 1px solid rgba(43, 32, 36, 0.14);
+        white-space: nowrap;
+        transition:
+          background-color 160ms var(--ease-out),
+          color 160ms var(--ease-out),
+          border-color 160ms var(--ease-out),
+          transform 160ms var(--ease-out);
+      }
+
+      .event-chip:hover {
+        border-color: var(--color-maroon);
+        color: var(--color-maroon);
+        transform: translateY(-1px);
+      }
+
+      .event-chip.is-active {
+        background-color: var(--color-maroon);
+        color: #fffbf5;
+        border-color: var(--color-maroon);
+      }
+
+      /* 6 Feature Cards Grid */
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .feature-card {
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .feature-icon-wrap {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background-color: var(--color-blush);
+        color: var(--color-maroon);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .feature-title {
+        font-size: 1.25rem;
+      }
+
+      .feature-body {
+        font-size: 0.9375rem;
+        color: var(--color-text-muted);
+        line-height: 1.6;
+      }
+
+      @media (max-width: 960px) {
+        .features-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* 4-Step How-It-Works Strip */
+      .steps-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+
+      .step-card {
+        padding: 26px;
+        position: relative;
+      }
+
+      .step-num {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--color-marigold-text);
+        line-height: 1;
+        margin-bottom: 14px;
+      }
+
+      .step-title {
+        font-size: 1.125rem;
+        margin-bottom: 8px;
+      }
+
+      .step-desc {
+        font-size: 0.9375rem;
+        color: var(--color-text-muted);
+      }
+
+      @media (max-width: 960px) {
+        .steps-strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .steps-strip {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* 3-Tier Pricing */
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .pricing-card {
+        padding: 32px 28px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .pricing-card.is-featured {
+        border: 2px solid var(--color-marigold);
+        box-shadow: 0 20px 44px -16px rgba(232, 163, 23, 0.25);
+      }
+
+      .pricing-tier-name {
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+
+      .pricing-audience {
+        font-size: 0.875rem;
+        color: var(--color-text-muted);
+        margin-bottom: 20px;
+      }
+
+      .pricing-price {
+        font-family: var(--font-display);
+        font-size: 2.35rem;
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: 22px;
+      }
+
+      .pricing-price span {
+        font-family: var(--font-body);
+        font-size: 0.9375rem;
+        font-weight: 400;
+        color: var(--color-text-muted);
+      }
+
+      .pricing-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 28px;
+        flex: 1;
+      }
+
+      .pricing-list li {
+        font-size: 0.9375rem;
+        color: var(--color-text);
+        padding-left: 22px;
+        position: relative;
+      }
+
+      .pricing-list li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--color-marigold);
+      }
+
+      @media (max-width: 960px) {
+        .pricing-grid {
+          grid-template-columns: 1fr;
+          max-width: 480px;
+          margin: 0 auto;
+        }
+      }
+
+      /* 3 Testimonial Cards */
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .testimonial-card {
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .testimonial-quote {
+        font-size: 1rem;
+        line-height: 1.65;
+        color: var(--color-text);
+      }
+
+      .testimonial-author {
+        padding-top: 16px;
+        border-top: 1px solid var(--color-border);
+      }
+
+      .testimonial-name {
+        font-weight: 600;
+        font-size: 0.9375rem;
+        color: var(--color-text);
+      }
+
+      .testimonial-meta {
+        font-size: 0.8125rem;
+        color: var(--color-text-muted);
+        margin-top: 2px;
+      }
+
+      @media (max-width: 960px) {
+        .testimonials-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* CTA Banner */
+      .cta-banner {
+        background-color: var(--color-maroon);
+        color: #fffbf5;
+        border-radius: var(--radius-card);
+        padding: 56px 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-banner h2 {
+        color: #fffbf5;
+        font-size: clamp(1.75rem, 3vw, 2.35rem);
+        margin-bottom: 10px;
+      }
+
+      .cta-banner p {
+        color: rgba(255, 251, 245, 0.85);
+        max-width: 52ch;
+      }
+
+      @media (max-width: 820px) {
+        .cta-banner {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 40px 28px;
+        }
+      }
+
+      /* 4-Column Footer */
+      .landing-footer {
+        background-color: var(--color-surface);
+        border-top: 1px solid var(--color-border);
+        padding: 64px 0 32px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 48px;
+      }
+
+      .footer-brand-desc {
+        font-size: 0.9375rem;
+        color: var(--color-text-muted);
+        margin-top: 12px;
+        max-width: 30ch;
+      }
+
+      .footer-col-title {
+        font-family: var(--font-body);
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: 14px;
+      }
+
+      .footer-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .footer-links a,
+      .footer-links button {
+        font-size: 0.9375rem;
+        color: var(--color-text-muted);
+        text-align: left;
+        transition: color 150ms var(--ease-out);
+      }
+
+      .footer-links a:hover,
+      .footer-links button:hover {
+        color: var(--color-maroon);
+      }
+
+      .footer-bottom {
+        padding-top: 24px;
+        border-top: 1px solid var(--color-border);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 0.875rem;
+        color: var(--color-text-muted);
+      }
+
+      @media (max-width: 900px) {
+        .footer-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 540px) {
+        .footer-grid {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+      }
+
+      /* ======================================================================
+         4. VIEW 2 — APP SHELL
+         ====================================================================== */
+      .app-shell {
+        min-height: 100vh;
+        display: flex;
+        background-color: var(--color-ivory);
+      }
+
+      /* Left Sidebar (Desktop) */
+      .app-sidebar {
+        width: var(--sidebar-width);
+        flex-shrink: 0;
+        background-color: var(--color-surface);
+        border-right: 1px solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 24px 16px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+      }
+
+      .sidebar-top {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .sidebar-brand {
+        padding: 0 10px;
+      }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .sidebar-tab-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        white-space: nowrap;
+        transition:
+          background-color 160ms var(--ease-out),
+          color 160ms var(--ease-out);
+      }
+
+      .sidebar-tab-btn:hover {
+        background-color: var(--color-blush-soft);
+        color: var(--color-maroon);
+      }
+
+      .sidebar-tab-btn.is-active {
+        background-color: var(--color-blush);
+        color: var(--color-maroon);
+        font-weight: 600;
+      }
+
+      .sidebar-footer {
+        padding-top: 16px;
+        border-top: 1px solid var(--color-border);
+      }
+
+      .back-to-landing-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        min-height: 42px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out);
+      }
+
+      .back-to-landing-btn:hover {
+        background-color: rgba(43, 32, 36, 0.05);
+        color: var(--color-text);
+      }
+
+      /* Main App Area */
+      .app-main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* App Top Bar */
+      .app-topbar {
+        height: 72px;
+        background-color: var(--color-surface);
+        border-bottom: 1px solid var(--color-border);
+        padding: 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 30;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .topbar-event-name {
+        font-family: var(--font-display);
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--color-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-shrink: 0;
+        position: relative;
+      }
+
+      .countdown-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background-color: var(--color-blush);
+        color: var(--color-maroon);
+        font-size: 0.875rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .bell-btn {
+        position: relative;
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        border: 1px solid var(--color-border);
+        background-color: var(--color-ivory);
+        color: var(--color-text);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: border-color 160ms var(--ease-out), color 160ms var(--ease-out);
+      }
+
+      .bell-btn:hover {
+        border-color: var(--color-maroon);
+        color: var(--color-maroon);
+      }
+
+      .bell-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--color-marigold);
+      }
+
+      /* Reminders Popover */
+      .reminders-popover {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 310px;
+        background-color: var(--color-surface);
+        border-radius: var(--radius-card);
+        box-shadow: 0 20px 40px -12px rgba(43, 32, 36, 0.2);
+        border: 1px solid var(--color-border);
+        padding: 18px;
+        z-index: 60;
+      }
+
+      .reminders-popover-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .reminders-popover-title {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        font-weight: 700;
+      }
+
+      .reminder-item {
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(43, 32, 36, 0.06);
+        font-size: 0.875rem;
+      }
+
+      .reminder-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .reminder-item strong {
+        display: block;
+        color: var(--color-text);
+        margin-bottom: 2px;
+      }
+
+      .reminder-item span {
+        color: var(--color-text-muted);
+        font-size: 0.8125rem;
+      }
+
+      /* App Workspace Content */
+      .app-content {
+        padding: 32px;
+        max-width: 1240px;
+        width: 100%;
+      }
+
+      .tab-panel {
+        display: none;
+      }
+
+      .tab-panel.is-active {
+        display: block;
+      }
+
+      .tab-heading-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+
+      .tab-heading {
+        font-size: clamp(1.65rem, 2.5vw, 2.15rem);
+      }
+
+      .tab-subheading {
+        font-size: 0.9375rem;
+        color: var(--color-text-muted);
+      }
+
+      /* Dashed-Border Placeholder Feature Boxes */
+      .placeholder-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .placeholder-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .placeholder-box {
+        background-color: var(--color-surface);
+        border: 2px dashed var(--color-border-dashed);
+        border-radius: var(--radius-card);
+        padding: 28px 24px;
+        min-height: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 14px;
+        box-shadow: 0 6px 20px -12px rgba(43, 32, 36, 0.08);
+        transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out);
+      }
+
+      .placeholder-box:hover {
+        border-color: var(--color-marigold);
+        transform: translateY(-2px);
+      }
+
+      .placeholder-box-wide {
+        grid-column: span 2;
+      }
+
+      .placeholder-title {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-maroon);
+      }
+
+      .placeholder-desc {
+        font-size: 0.9375rem;
+        color: var(--color-text-muted);
+        line-height: 1.55;
+      }
+
+      .placeholder-meta {
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: var(--color-marigold-text);
+      }
+
+      /* Mobile Bottom Tab Bar (hidden on desktop) */
+      .mobile-bottom-bar {
+        display: none;
+      }
+
+      .mobile-back-link {
+        display: none;
+      }
+
+      @media (max-width: 900px) {
+        .app-sidebar {
+          display: none;
+        }
+        .app-topbar {
+          padding: 0 16px;
+        }
+        .app-content {
+          padding: 24px 16px 96px;
+        }
+        .placeholder-grid,
+        .placeholder-grid-3 {
+          grid-template-columns: 1fr;
+        }
+        .placeholder-box-wide {
+          grid-column: span 1;
+        }
+        .mobile-back-link {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          border: 1px solid var(--color-border);
+          color: var(--color-text);
+          flex-shrink: 0;
+        }
+        .mobile-bottom-bar {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 68px;
+          background-color: var(--color-surface);
+          border-top: 1px solid var(--color-border);
+          z-index: 40;
+          padding: 4px 6px;
+        }
+        .mobile-tab-btn {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          font-size: 0.6875rem;
+          font-weight: 500;
+          color: var(--color-text-muted);
+          border-radius: 8px;
+          white-space: nowrap;
+        }
+        .mobile-tab-btn.is-active {
+          color: var(--color-maroon);
+          background-color: var(--color-blush-soft);
+          font-weight: 600;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ====================================================================
+         VIEW 1: LANDING PAGE (Shown by default)
+         ==================================================================== -->
+    <div id="view-landing">
+      <!-- Sticky Navbar -->
+      <header class="landing-header">
+        <div class="container nav-inner">
+          <!-- Brand Wordmark -->
+          <a href="#top" class="brand-wordmark" aria-label="Utsav AI Home">
+            <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+              <circle cx="14" cy="14" r="13" fill="#F8E1E7" stroke="#7A1F3D" stroke-width="1.5" />
+              <path
+                d="M14 5.5C15.6 9 18 11.4 21.5 14C18 16.6 15.6 19 14 22.5C12.4 19 10 16.6 6.5 14C10 11.4 12.4 9 14 5.5Z"
+                fill="#E8A317"
+              />
+              <circle cx="14" cy="14" r="2.6" fill="#7A1F3D" />
+            </svg>
+            <span>Utsav AI</span>
+          </a>
+
+          <!-- Navigation Links -->
+          <nav class="nav-links" aria-label="Primary Navigation">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#occasions" class="nav-link">Occasions</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="#testimonials" class="nav-link">Stories</a>
+          </nav>
+
+          <!-- Primary CTA & Mobile Hamburger -->
+          <div class="nav-actions">
+            <button type="button" class="btn btn-primary btn-desktop-cta js-start-planning">
+              Start Planning
+            </button>
+            <button
+              type="button"
+              id="hamburger-toggle"
+              class="hamburger-btn"
+              aria-label="Toggle navigation menu"
+              aria-expanded="false"
+              aria-controls="mobile-nav-drawer"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Mobile Hamburger Drawer -->
+      <div id="mobile-nav-drawer" class="mobile-menu" aria-label="Mobile Navigation">
+        <a href="#features" class="js-mobile-link">Features</a>
+        <a href="#how-it-works" class="js-mobile-link">How It Works</a>
+        <a href="#occasions" class="js-mobile-link">Occasions</a>
+        <a href="#pricing" class="js-mobile-link">Pricing</a>
+        <a href="#testimonials" class="js-mobile-link">Stories</a>
+        <button type="button" class="btn btn-primary js-start-planning" style="margin-top: 6px; width: 100%">
+          Start Planning
+        </button>
+      </div>
+
+      <main id="top">
+        <!-- Hero Section -->
+        <section class="hero-section">
+          <!-- Subtle Marigold Floral & Confetti SVG Motif -->
+          <div class="hero-motif" aria-hidden="true">
+            <svg width="100%" height="100%" viewBox="0 0 1440 820" preserveAspectRatio="xMidYMid slice" fill="none">
+              <!-- Top-right floral garland arc -->
+              <path
+                d="M960 -20 C 1080 120, 1260 150, 1460 110"
+                stroke="#E8A317"
+                stroke-opacity="0.24"
+                stroke-width="1.5"
+                stroke-dasharray="6 8"
+              />
+              <circle cx="1080" cy="72" r="22" fill="#E8A317" fill-opacity="0.14" />
+              <circle cx="1080" cy="72" r="8" fill="#7A1F3D" fill-opacity="0.18" />
+              <circle cx="1220" cy="118" r="16" fill="#F8E1E7" fill-opacity="0.95" />
+              <circle cx="1220" cy="118" r="5" fill="#E8A317" fill-opacity="0.45" />
+              <circle cx="1355" cy="115" r="26" fill="#E8A317" fill-opacity="0.12" />
+              <circle cx="1355" cy="115" r="9" fill="#7A1F3D" fill-opacity="0.16" />
+
+              <!-- Subtle scattered celebration confetti petals -->
+              <rect x="140" y="130" width="12" height="5" rx="2.5" transform="rotate(24 140 130)" fill="#E8A317" fill-opacity="0.35" />
+              <rect x="340" y="92" width="10" height="5" rx="2.5" transform="rotate(-18 340 92)" fill="#7A1F3D" fill-opacity="0.2" />
+              <circle cx="620" cy="112" r="4" fill="#E8A317" fill-opacity="0.32" />
+              <rect x="760" y="690" width="14" height="5" rx="2.5" transform="rotate(35 760 690)" fill="#7A1F3D" fill-opacity="0.16" />
+              <circle cx="1280" cy="640" r="6" fill="#E8A317" fill-opacity="0.26" />
+              <rect x="90" y="650" width="12" height="6" rx="3" transform="rotate(-32 90 650)" fill="#E8A317" fill-opacity="0.28" />
+
+              <!-- Soft floral rosette bottom-left -->
+              <g transform="translate(80 730)" opacity="0.22">
+                <circle cx="0" cy="-24" r="14" fill="#E8A317" />
+                <circle cx="23" cy="-8" r="14" fill="#E8A317" />
+                <circle cx="14" cy="19" r="14" fill="#E8A317" />
+                <circle cx="-14" cy="19" r="14" fill="#E8A317" />
+                <circle cx="-23" cy="-8" r="14" fill="#E8A317" />
+                <circle cx="0" cy="0" r="10" fill="#7A1F3D" />
+              </g>
+            </svg>
+          </div>
+
+          <div class="container hero-grid">
+            <!-- Left Column: Proposition & CTAs -->
+            <div>
+              <p class="hero-kicker">Meet Shubh — Your Personal Celebration Architect</p>
+              <h1 class="hero-headline">
+                Plan Your Perfect <em>Event</em> with AI
+              </h1>
+              <p class="hero-subtext">
+                Enter your budget, guests and date. Shubh, your AI planner, handles the rest.
+              </p>
+
+              <div class="hero-ctas">
+                <button type="button" class="btn btn-primary js-start-planning">
+                  Start Planning
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </button>
+                <a href="#how-it-works" class="btn btn-secondary">
+                  See How It Works
+                </a>
+              </div>
+
+              <div class="hero-metrics-inline">
+                <span><strong>60 sec</strong> blueprint setup</span>
+                <span aria-hidden="true">·</span>
+                <span><strong>Live</strong> budget &amp; RSVP tracking</span>
+                <span aria-hidden="true">·</span>
+                <span><strong>Instant</strong> replanning on changes</span>
+              </div>
+            </div>
+
+            <!-- Right Column: Live Celebration Blueprint Card -->
+            <aside class="hero-preview-card" aria-label="Sample event blueprint">
+              <div class="preview-header">
+                <div>
+                  <h2 class="preview-title" id="hero-preview-title">Aarav &amp; Meera's Wedding</h2>
+                  <p class="preview-meta" id="hero-preview-meta">280 guests · Jaipur · ₹24,00,000 budget</p>
+                </div>
+                <span class="preview-countdown tabular-nums" id="hero-preview-days">D-42 to go</span>
+              </div>
+
+              <div class="preview-row">
+                <span class="preview-row-label">Venue &amp; Catering (45%)</span>
+                <span class="preview-row-value tabular-nums" id="hero-preview-venue">₹10,80,000</span>
+              </div>
+              <div class="preview-row">
+                <span class="preview-row-label">Decor &amp; Florals (18%)</span>
+                <span class="preview-row-value tabular-nums" id="hero-preview-decor">₹4,32,000</span>
+              </div>
+              <div class="preview-row">
+                <span class="preview-row-label">Shortlisted Vendors</span>
+                <span class="preview-row-value tabular-nums">14 matched</span>
+              </div>
+              <div class="preview-row">
+                <span class="preview-row-label">Confirmed RSVPs</span>
+                <span class="preview-row-value tabular-nums" id="hero-preview-rsvp">218 / 280</span>
+              </div>
+
+              <div class="preview-note">
+                <strong>Shubh's Update:</strong> Photographer deposit is due in 4 days. Rebalanced floral lighting by ₹22,000 to keep your contingency reserve intact.
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- Event-Type Chips Strip -->
+        <section id="occasions" class="occasions-band" aria-label="Supported Event Types">
+          <div class="container occasions-inner">
+            <span class="occasions-label">Designed for every milestone:</span>
+            <div class="chips-row" role="group" aria-label="Choose an occasion to preview">
+              <button type="button" class="event-chip is-active" data-occasion="Wedding">Wedding</button>
+              <button type="button" class="event-chip" data-occasion="Engagement">Engagement</button>
+              <button type="button" class="event-chip" data-occasion="Birthday">Birthday</button>
+              <button type="button" class="event-chip" data-occasion="Anniversary">Anniversary</button>
+              <button type="button" class="event-chip" data-occasion="Corporate Offsite">Corporate Offsite</button>
+              <button type="button" class="event-chip" data-occasion="Baby Shower">Baby Shower</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6 Feature Cards -->
+        <section id="features" class="section">
+          <div class="container">
+            <div class="section-header reveal">
+              <p class="section-kicker">Everything In One Calm Workspace</p>
+              <h2 class="section-title">Six intelligent tools working together before, during, and when plans shift</h2>
+              <p class="section-desc">
+                Replace scattered spreadsheets and endless message threads with a structured plan that adapts as your celebration evolves.
+              </p>
+            </div>
+
+            <div class="features-grid">
+              <!-- Feature 1 -->
+              <article class="card card-hover feature-card reveal">
+                <div class="feature-icon-wrap" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                </div>
+                <h3 class="feature-title">Smart Timeline</h3>
+                <p class="feature-body">
+                  Automatically builds a month-by-month and week-by-week run sheet backwards from your event date, tailored to your ceremony count.
+                </p>
+              </article>
+
+              <!-- Feature 2 -->
+              <article class="card card-hover feature-card reveal">
+                <div class="feature-icon-wrap" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="8.5" cy="7" r="4" />
+                    <polyline points="17 11 19 13 23 9" />
+                  </svg>
+                </div>
+                <h3 class="feature-title">Vendor Matchmaker</h3>
+                <p class="feature-body">
+                  Shortlists caterers, decorators, photographers, and venues matched to your city, guest count, and exact budget bracket.
+                </p>
+              </article>
+
+              <!-- Feature 3 -->
+              <article class="card card-hover feature-card reveal">
+                <div class="feature-icon-wrap" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                </div>
+                <h3 class="feature-title">RSVP Tracker</h3>
+                <p class="feature-body">
+                  Track household attendance, meal preferences, and travel arrivals in real time without chasing guests across group chats.
+                </p>
+              </article>
+
+              <!-- Feature 4 -->
+              <article class="card card-hover feature-card reveal">
+                <div class="feature-icon-wrap" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
+                <h3 class="feature-title">Budget Guardian</h3>
+                <p class="feature-body">
+                  Splits your total budget across categories, tracks vendor advances and balances, and flags overruns before you commit.
+                </p>
+              </article>
+
+              <!-- Feature 5 -->
+              <article class="card card-hover feature-card reveal">
+                <div class="feature-icon-wrap" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                  </svg>
+                </div>
+                <h3 class="feature-title">Auto Reminders</h3>
+                <p class="feature-body">
+                  Timely nudges for deposit due dates, tasting appointments, final headcount lock-ins, and family task sign-offs.
+                </p>
+              </article>
+
+              <!-- Feature 6 -->
+              <article class="card card-hover feature-card reveal">
+                <div class="feature-icon-wrap" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10" />
+                    <polyline points="1 20 1 14 7 14" />
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                  </svg>
+                </div>
+                <h3 class="feature-title">Instant Replanning</h3>
+                <p class="feature-body">
+                  Guest list grew by 40 or the venue date moved? Tell Shubh what changed and watch timelines, budgets, and tasks recalculate cleanly.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4-Step How-It-Works Strip -->
+        <section id="how-it-works" class="section section-soft">
+          <div class="container">
+            <div class="section-header reveal">
+              <p class="section-kicker">How It Works</p>
+              <h2 class="section-title">From first idea to final toast in four calm steps</h2>
+            </div>
+
+            <div class="steps-strip">
+              <article class="card card-hover step-card reveal">
+                <div class="step-num tabular-nums">01</div>
+                <h3 class="step-title">Tell us your event</h3>
+                <p class="step-desc">
+                  Share your occasion, target date, city, guest count, and comfortable budget range.
+                </p>
+              </article>
+
+              <article class="card card-hover step-card reveal">
+                <div class="step-num tabular-nums">02</div>
+                <h3 class="step-title">Get your plan</h3>
+                <p class="step-desc">
+                  Shubh generates a realistic category budget, milestone timeline, and curated vendor shortlist.
+                </p>
+              </article>
+
+              <article class="card card-hover step-card reveal">
+                <div class="step-num tabular-nums">03</div>
+                <h3 class="step-title">Track everything</h3>
+                <p class="step-desc">
+                  Log bookings, monitor RSVPs, and clear payment reminders from one organized workspace.
+                </p>
+              </article>
+
+              <article class="card card-hover step-card reveal">
+                <div class="step-num tabular-nums">04</div>
+                <h3 class="step-title">Shubh replans when life happens</h3>
+                <p class="step-desc">
+                  Adjust headcount, swap a vendor, or shift dates anytime—your entire plan updates in seconds.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3-Tier Pricing -->
+        <section id="pricing" class="section">
+          <div class="container">
+            <div class="section-header section-header-center reveal">
+              <p class="section-kicker">Simple, Transparent Pricing</p>
+              <h2 class="section-title">Start free, upgrade when your celebration grows</h2>
+              <p class="section-desc">
+                Every plan includes Shubh's structured timeline and budget engine with zero hidden vendor markups.
+              </p>
+            </div>
+
+            <div class="pricing-grid">
+              <!-- Tier 1: Free -->
+              <article class="card card-hover pricing-card reveal">
+                <h3 class="pricing-tier-name">Free</h3>
+                <p class="pricing-audience">For intimate gatherings &amp; early exploration</p>
+                <div class="pricing-price tabular-nums">₹0 <span>/ forever</span></div>
+                <ul class="pricing-list">
+                  <li>1 active event workspace</li>
+                  <li>Smart Timeline &amp; checklist up to 40 tasks</li>
+                  <li>Guest list &amp; RSVP tracking up to 75 guests</li>
+                  <li>Category budget split calculator</li>
+                </ul>
+                <button type="button" class="btn btn-secondary js-start-planning" style="width: 100%">
+                  Start Planning Free
+                </button>
+              </article>
+
+              <!-- Tier 2: Pro -->
+              <article class="card card-hover pricing-card is-featured reveal">
+                <h3 class="pricing-tier-name">Pro</h3>
+                <p class="pricing-audience">For weddings, milestones &amp; multi-day events</p>
+                <div class="pricing-price tabular-nums">₹1,499 <span>/ event</span></div>
+                <ul class="pricing-list">
+                  <li>Unlimited guests, RSVPs &amp; meal tracking</li>
+                  <li>Full Shubh AI chat &amp; Instant Replanning</li>
+                  <li>Vendor Matchmaker &amp; shortlist comparison</li>
+                  <li>Automated payment &amp; task reminders</li>
+                </ul>
+                <button type="button" class="btn btn-primary js-start-planning" style="width: 100%">
+                  Start Planning with Pro
+                </button>
+              </article>
+
+              <!-- Tier 3: Planner Studio -->
+              <article class="card card-hover pricing-card reveal">
+                <h3 class="pricing-tier-name">Planner Studio</h3>
+                <p class="pricing-audience">For boutique planners &amp; corporate teams</p>
+                <div class="pricing-price tabular-nums">₹4,999 <span>/ month</span></div>
+                <ul class="pricing-list">
+                  <li>Up to 15 concurrent client events</li>
+                  <li>Co-planner &amp; family collaborator seats</li>
+                  <li>Custom vendor directory &amp; quote logs</li>
+                  <li>Priority Shubh replanning &amp; PDF exports</li>
+                </ul>
+                <button type="button" class="btn btn-maroon js-start-planning" style="width: 100%">
+                  Start Planning Studio
+                </button>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3 Testimonial Cards -->
+        <section id="testimonials" class="section section-soft">
+          <div class="container">
+            <div class="section-header reveal">
+              <p class="section-kicker">Celebrated Across Cities</p>
+              <h2 class="section-title">Real hosts who traded spreadsheet chaos for calm</h2>
+            </div>
+
+            <div class="testimonials-grid">
+              <article class="card card-hover testimonial-card reveal">
+                <p class="testimonial-quote">
+                  “We had 320 guests flying into Jaipur across three ceremonies. When our sangeet venue changed six weeks out, Shubh rebuilt our vendor schedule and decor budget in under two minutes.”
+                </p>
+                <div class="testimonial-author">
+                  <div class="testimonial-name">Ananya &amp; Kabir Deshmukh</div>
+                  <div class="testimonial-meta">3-Day Wedding · Jaipur · Saved 14 planning hours/week</div>
+                </div>
+              </article>
+
+              <article class="card card-hover testimonial-card reveal">
+                <p class="testimonial-quote">
+                  “Organizing my parents' 50th anniversary from another city felt daunting. Auto Reminders and the RSVP Tracker kept every cousin and caterer aligned without a single missed deposit.”
+                </p>
+                <div class="testimonial-author">
+                  <div class="testimonial-name">Rohan Kulkarni</div>
+                  <div class="testimonial-meta">50th Anniversary Dinner · Bengaluru · 110 Guests</div>
+                </div>
+              </article>
+
+              <article class="card card-hover testimonial-card reveal">
+                <p class="testimonial-quote">
+                  “Our annual leadership offsite usually lives in four broken sheets. Utsav AI kept AV, catering, and rooming lists in one clean view and stayed within 2% of our approved budget.”
+                </p>
+                <div class="testimonial-author">
+                  <div class="testimonial-name">Meera Nair</div>
+                  <div class="testimonial-meta">Head of People · Corporate Offsite · Mumbai</div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA Banner -->
+        <section class="section">
+          <div class="container">
+            <div class="cta-banner reveal">
+              <div>
+                <h2>Ready to plan with confidence?</h2>
+                <p>
+                  Launch your workspace in seconds and let Shubh organize your timeline, budget, vendors, and guest list from day one.
+                </p>
+              </div>
+              <button type="button" class="btn btn-primary js-start-planning">
+                Start Planning Now
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- 4-Column Footer -->
+      <footer class="landing-footer">
+        <div class="container">
+          <div class="footer-grid">
+            <!-- Column 1: Brand -->
+            <div>
+              <a href="#top" class="brand-wordmark">
+                <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                  <circle cx="14" cy="14" r="13" fill="#F8E1E7" stroke="#7A1F3D" stroke-width="1.5" />
+                  <path
+                    d="M14 5.5C15.6 9 18 11.4 21.5 14C18 16.6 15.6 19 14 22.5C12.4 19 10 16.6 6.5 14C10 11.4 12.4 9 14 5.5Z"
+                    fill="#E8A317"
+                  />
+                  <circle cx="14" cy="14" r="2.6" fill="#7A1F3D" />
+                </svg>
+                <span>Utsav AI</span>
+              </a>
+              <p class="footer-brand-desc">
+                Calm, intelligent celebration planning powered by Shubh — built for weddings, family milestones, and team gatherings.
+              </p>
+            </div>
+
+            <!-- Column 2: Product -->
+            <div>
+              <div class="footer-col-title">Product</div>
+              <ul class="footer-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><button type="button" class="js-start-planning">Open Planner</button></li>
+              </ul>
+            </div>
+
+            <!-- Column 3: Occasions -->
+            <div>
+              <div class="footer-col-title">Occasions</div>
+              <ul class="footer-links">
+                <li><a href="#occasions" data-footer-occasion="Wedding">Wedding</a></li>
+                <li><a href="#occasions" data-footer-occasion="Engagement">Engagement</a></li>
+                <li><a href="#occasions" data-footer-occasion="Birthday">Birthday</a></li>
+                <li><a href="#occasions" data-footer-occasion="Corporate Offsite">Corporate Offsite</a></li>
+              </ul>
+            </div>
+
+            <!-- Column 4: Company -->
+            <div>
+              <div class="footer-col-title">Company</div>
+              <ul class="footer-links">
+                <li><a href="#testimonials">Customer Stories</a></li>
+                <li><a href="mailto:hello@utsavai.app">hello@utsavai.app</a></li>
+                <li><a href="#top">Privacy Policy</a></li>
+                <li><a href="#top">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="footer-bottom">
+            <span>&copy; 2026 Utsav AI. Crafted for joyful gatherings.</span>
+            <span>Marigold &amp; Maroon Editorial System</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ====================================================================
+         VIEW 2: APP SHELL (Hidden by default, shown on "Start Planning")
+         ==================================================================== -->
+    <div id="view-app" class="app-shell view-hidden" aria-hidden="true">
+      <!-- Left Sidebar Navigation (Desktop) -->
+      <aside class="app-sidebar" aria-label="Workspace Navigation">
+        <div class="sidebar-top">
+          <div class="sidebar-brand">
+            <button type="button" id="sidebar-logo-home" class="brand-wordmark" title="Return to Landing Page">
+              <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <circle cx="14" cy="14" r="13" fill="#F8E1E7" stroke="#7A1F3D" stroke-width="1.5" />
+                <path
+                  d="M14 5.5C15.6 9 18 11.4 21.5 14C18 16.6 15.6 19 14 22.5C12.4 19 10 16.6 6.5 14C10 11.4 12.4 9 14 5.5Z"
+                  fill="#E8A317"
+                />
+                <circle cx="14" cy="14" r="2.6" fill="#7A1F3D" />
+              </svg>
+              <span>Utsav AI</span>
+            </button>
+          </div>
+
+          <nav class="sidebar-nav" role="tablist" aria-label="Planner sections">
+            <button type="button" class="sidebar-tab-btn is-active" data-tab="dashboard" role="tab" aria-selected="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="9" />
+                <rect x="14" y="3" width="7" height="5" />
+                <rect x="14" y="12" width="7" height="9" />
+                <rect x="3" y="16" width="7" height="5" />
+              </svg>
+              <span>Dashboard</span>
+            </button>
+
+            <button type="button" class="sidebar-tab-btn" data-tab="timeline" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>Timeline</span>
+            </button>
+
+            <button type="button" class="sidebar-tab-btn" data-tab="vendors" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+              <span>Vendors</span>
+            </button>
+
+            <button type="button" class="sidebar-tab-btn" data-tab="guests" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <span>Guests</span>
+            </button>
+
+            <button type="button" class="sidebar-tab-btn" data-tab="budget" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+              <span>Budget</span>
+            </button>
+
+            <button type="button" class="sidebar-tab-btn" data-tab="shubh" role="tab" aria-selected="false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              <span>Shubh AI</span>
+            </button>
+          </nav>
+        </div>
+
+        <div class="sidebar-footer">
+          <button type="button" class="back-to-landing-btn js-back-landing">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            <span>Back to Landing</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main App Workspace -->
+      <div class="app-main">
+        <!-- App Top Bar -->
+        <header class="app-topbar">
+          <div class="topbar-left">
+            <button type="button" class="mobile-back-link js-back-landing" aria-label="Back to Landing Page">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+            </button>
+            <h1 class="topbar-event-name" id="app-event-title">Aarav &amp; Meera's Wedding</h1>
+          </div>
+
+          <div class="topbar-right">
+            <span class="countdown-pill tabular-nums" id="app-countdown-pill">D-42 to go</span>
+            <button
+              type="button"
+              id="bell-toggle-btn"
+              class="bell-btn"
+              aria-label="Open reminders"
+              aria-expanded="false"
+              aria-controls="reminders-popover"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="bell-badge" aria-hidden="true"></span>
+            </button>
+
+            <!-- Reminders Popover -->
+            <div id="reminders-popover" class="reminders-popover view-hidden" role="dialog" aria-label="Upcoming Reminders">
+              <div class="reminders-popover-header">
+                <span class="reminders-popover-title">Reminders</span>
+                <button type="button" id="close-reminders-btn" aria-label="Close reminders" style="font-size: 0.8125rem; color: var(--color-maroon); font-weight: 600">
+                  Close
+                </button>
+              </div>
+              <div class="reminder-item">
+                <strong>Confirm Catering Tasting</strong>
+                <span>Due in 2 days · Venue &amp; Hospitality</span>
+              </div>
+              <div class="reminder-item">
+                <strong>Photographer 2nd Milestone Deposit</strong>
+                <span>Due in 4 days · Budget</span>
+              </div>
+              <div class="reminder-item">
+                <strong>Send Outstation Travel Form</strong>
+                <span>Due in 6 days · Guests</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Tab Content Panels (Only 1 visible at a time) -->
+        <main class="app-content">
+          <!-- TAB 1: DASHBOARD -->
+          <section id="panel-dashboard" class="tab-panel is-active" role="tabpanel" aria-label="Dashboard">
+            <div class="tab-heading-row">
+              <h2 class="tab-heading">Dashboard</h2>
+              <span class="tab-subheading">Overview of your celebration readiness</span>
+            </div>
+
+            <div class="placeholder-grid">
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Countdown</h3>
+                  <p class="placeholder-desc">Live days-to-go timer, ceremony schedule milestones, and weather watch for your event date.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Dashboard</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Plan Health</h3>
+                  <p class="placeholder-desc">Overall readiness check across booked vendors, timeline pacing, and contingency coverage.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Dashboard</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Upcoming Tasks</h3>
+                  <p class="placeholder-desc">Prioritized checklist items due this week with assigned family or team owners.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Dashboard</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Budget Snapshot</h3>
+                  <p class="placeholder-desc">Total planned budget vs. committed vendor quotes and remaining unallocated buffer.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Dashboard</span>
+              </div>
+
+              <div class="placeholder-box placeholder-box-wide">
+                <div>
+                  <h3 class="placeholder-title">RSVP Snapshot</h3>
+                  <p class="placeholder-desc">Confirmed, pending, and declined guest counts alongside dietary and accommodation summaries.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Dashboard</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 2: TIMELINE -->
+          <section id="panel-timeline" class="tab-panel" role="tabpanel" aria-label="Timeline">
+            <div class="tab-heading-row">
+              <h2 class="tab-heading">Timeline</h2>
+              <span class="tab-subheading">Milestones, tasks, and deadlines leading up to event day</span>
+            </div>
+
+            <div class="placeholder-grid placeholder-grid-3">
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Month-by-Month Timeline</h3>
+                  <p class="placeholder-desc">Chronological milestone roadmap structured from 6 months out through event week.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Timeline</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Checklist</h3>
+                  <p class="placeholder-desc">Filterable action items grouped by ceremony, logistics, attire, and hospitality.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Timeline</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Overdue Tasks</h3>
+                  <p class="placeholder-desc">High-priority slipped items flagged for immediate attention or Shubh rescheduling.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Timeline</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 3: VENDORS -->
+          <section id="panel-vendors" class="tab-panel" role="tabpanel" aria-label="Vendors">
+            <div class="tab-heading-row">
+              <h2 class="tab-heading">Vendors</h2>
+              <span class="tab-subheading">Discover, compare, and lock in your celebration partners</span>
+            </div>
+
+            <div class="placeholder-grid placeholder-grid-3">
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Suggested Vendors</h3>
+                  <p class="placeholder-desc">AI-matched venues, caterers, photographers, and decorators tailored to your budget and city.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Vendors</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Shortlist</h3>
+                  <p class="placeholder-desc">Side-by-side quote comparison, availability notes, and tasting or walkthrough logs.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Vendors</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Booked</h3>
+                  <p class="placeholder-desc">Confirmed contracts, primary point-of-contact details, and arrival call times.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Vendors</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 4: GUESTS -->
+          <section id="panel-guests" class="tab-panel" role="tabpanel" aria-label="Guests">
+            <div class="tab-heading-row">
+              <h2 class="tab-heading">Guests</h2>
+              <span class="tab-subheading">Households, invitations, and real-time RSVP status</span>
+            </div>
+
+            <div class="placeholder-grid placeholder-grid-3">
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Guest List</h3>
+                  <p class="placeholder-desc">Searchable household directory with family side, VIP flags, and room allocations.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Guests</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">RSVP Summary</h3>
+                  <p class="placeholder-desc">Attendance breakdown per ceremony or session, plus dietary preference totals.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Guests</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Send Invites</h3>
+                  <p class="placeholder-desc">Digital save-the-dates, WhatsApp or email invite dispatch, and polite follow-up nudges.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Guests</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 5: BUDGET -->
+          <section id="panel-budget" class="tab-panel" role="tabpanel" aria-label="Budget">
+            <div class="tab-heading-row">
+              <h2 class="tab-heading">Budget</h2>
+              <span class="tab-subheading">Allocations, logged expenses, and upcoming vendor payouts</span>
+            </div>
+
+            <div class="placeholder-grid placeholder-grid-3">
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Budget Split</h3>
+                  <p class="placeholder-desc">Recommended allocation percentages across venue, food, decor, photography, and buffer.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Budget</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Expenses</h3>
+                  <p class="placeholder-desc">Itemized ledger comparing estimated quotes against actual signed invoices.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Budget</span>
+              </div>
+
+              <div class="placeholder-box">
+                <div>
+                  <h3 class="placeholder-title">Payments Due</h3>
+                  <p class="placeholder-desc">Upcoming deposit and final settlement schedule with automated advance alerts.</p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Budget</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 6: SHUBH AI -->
+          <section id="panel-shubh" class="tab-panel" role="tabpanel" aria-label="Shubh AI">
+            <div class="tab-heading-row">
+              <h2 class="tab-heading">Shubh AI</h2>
+              <span class="tab-subheading">Conversational planning copilot &amp; instant change solver</span>
+            </div>
+
+            <div class="placeholder-grid">
+              <div class="placeholder-box" style="min-height: 260px">
+                <div>
+                  <h3 class="placeholder-title">Chat with Shubh</h3>
+                  <p class="placeholder-desc">
+                    Ask Shubh for venue ideas, cultural checklist etiquette, wording for invitations, or quick vendor negotiation tips.
+                  </p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Shubh AI</span>
+              </div>
+
+              <div class="placeholder-box" style="min-height: 260px">
+                <div>
+                  <h3 class="placeholder-title">What Changed? Replan</h3>
+                  <p class="placeholder-desc">
+                    Update your guest count, budget ceiling, or event date and preview Shubh's synchronized plan adjustments before applying.
+                  </p>
+                </div>
+                <span class="placeholder-meta">Future Feature Module · Shubh AI</span>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- Mobile Bottom Tab Bar (visible on mobile <= 900px) -->
+      <nav class="mobile-bottom-bar" role="tablist" aria-label="Mobile Workspace Tabs">
+        <button type="button" class="mobile-tab-btn is-active" data-tab="dashboard" role="tab" aria-selected="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="9" />
+            <rect x="14" y="3" width="7" height="5" />
+            <rect x="14" y="12" width="7" height="9" />
+            <rect x="3" y="16" width="7" height="5" />
+          </svg>
+          <span>Home</span>
+        </button>
+        <button type="button" class="mobile-tab-btn" data-tab="timeline" role="tab" aria-selected="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <span>Timeline</span>
+        </button>
+        <button type="button" class="mobile-tab-btn" data-tab="vendors" role="tab" aria-selected="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          </svg>
+          <span>Vendors</span>
+        </button>
+        <button type="button" class="mobile-tab-btn" data-tab="guests" role="tab" aria-selected="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+          </svg>
+          <span>Guests</span>
+        </button>
+        <button type="button" class="mobile-tab-btn" data-tab="budget" role="tab" aria-selected="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+          <span>Budget</span>
+        </button>
+        <button type="button" class="mobile-tab-btn" data-tab="shubh" role="tab" aria-selected="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          <span>Shubh AI</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ====================================================================
+         5. APPLICATION JAVASCRIPT (Vanilla JS, Zero Frameworks)
+         ==================================================================== -->
+    <script>
+      (function () {
+        'use strict';
+
+        // ------------------------------------------------------------------
+        // Sample Event Presets for Interactive Occasion Chips
+        // ------------------------------------------------------------------
+        var EVENT_PRESETS = {
+          Wedding: {
+            title: "Aarav & Meera's Wedding",
+            meta: '280 guests · Jaipur · ₹24,00,000 budget',
+            days: 'D-42 to go',
+            venue: '₹10,80,000',
+            decor: '₹4,32,000',
+            rsvp: '218 / 280',
+          },
+          Engagement: {
+            title: 'Riya & Dev Engagement Soirée',
+            meta: '120 guests · Udaipur · ₹6,50,000 budget',
+            days: 'D-28 to go',
+            venue: '₹2,92,500',
+            decor: '₹1,17,000',
+            rsvp: '98 / 120',
+          },
+          Birthday: {
+            title: "Tara's 30th Milestone Bash",
+            meta: '65 guests · Goa · ₹2,80,000 budget',
+            days: 'D-19 to go',
+            venue: '₹1,26,000',
+            decor: '₹50,400',
+            rsvp: '54 / 65',
+          },
+          Anniversary: {
+            title: "Parents' 50th Anniversary Gala",
+            meta: '110 guests · Bengaluru · ₹5,40,000 budget',
+            days: 'D-35 to go',
+            venue: '₹2,43,000',
+            decor: '₹97,200',
+            rsvp: '92 / 110',
+          },
+          'Corporate Offsite': {
+            title: 'Q4 Leadership Offsite Summit',
+            meta: '90 guests · Mumbai · ₹8,00,000 budget',
+            days: 'D-24 to go',
+            venue: '₹3,60,000',
+            decor: '₹1,44,000',
+            rsvp: '86 / 90',
+          },
+          'Baby Shower': {
+            title: "Neha's Sunshine Baby Shower",
+            meta: '45 guests · Pune · ₹1,60,000 budget',
+            days: 'D-15 to go',
+            venue: '₹72,000',
+            decor: '₹28,800',
+            rsvp: '41 / 45',
+          },
+        };
+
+        var currentOccasion = 'Wedding';
+
+        // DOM References
+        var viewLanding = document.getElementById('view-landing');
+        var viewApp = document.getElementById('view-app');
+
+        var startPlanningButtons = document.querySelectorAll('.js-start-planning');
+        var backToLandingButtons = document.querySelectorAll('.js-back-landing');
+        var sidebarLogoHome = document.getElementById('sidebar-logo-home');
+
+        var hamburgerBtn = document.getElementById('hamburger-toggle');
+        var mobileMenu = document.getElementById('mobile-nav-drawer');
+        var mobileLinks = document.querySelectorAll('.js-mobile-link');
+
+        var occasionChips = document.querySelectorAll('.event-chip');
+        var footerOccasionLinks = document.querySelectorAll('[data-footer-occasion]');
+
+        var heroPreviewTitle = document.getElementById('hero-preview-title');
+        var heroPreviewMeta = document.getElementById('hero-preview-meta');
+        var heroPreviewDays = document.getElementById('hero-preview-days');
+        var heroPreviewVenue = document.getElementById('hero-preview-venue');
+        var heroPreviewDecor = document.getElementById('hero-preview-decor');
+        var heroPreviewRsvp = document.getElementById('hero-preview-rsvp');
+
+        var appEventTitle = document.getElementById('app-event-title');
+        var appCountdownPill = document.getElementById('app-countdown-pill');
+
+        var tabButtons = document.querySelectorAll('[data-tab]');
+        var tabPanels = document.querySelectorAll('.tab-panel');
+
+        var bellToggleBtn = document.getElementById('bell-toggle-btn');
+        var remindersPopover = document.getElementById('reminders-popover');
+        var closeRemindersBtn = document.getElementById('close-reminders-btn');
+
+        // ------------------------------------------------------------------
+        // 1. View Switching (Landing <-> App Shell)
+        // ------------------------------------------------------------------
+        function showAppShell() {
+          closeMobileMenu();
+          viewLanding.classList.add('view-hidden');
+          viewLanding.setAttribute('aria-hidden', 'true');
+
+          viewApp.classList.remove('view-hidden');
+          viewApp.setAttribute('aria-hidden', 'false');
+
+          // Sync selected occasion context into View 2 Top Bar
+          var preset = EVENT_PRESETS[currentOccasion] || EVENT_PRESETS.Wedding;
+          appEventTitle.textContent = preset.title;
+          appCountdownPill.textContent = preset.days;
+
+          window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+
+        function showLandingPage() {
+          closeReminders();
+          viewApp.classList.add('view-hidden');
+          viewApp.setAttribute('aria-hidden', 'true');
+
+          viewLanding.classList.remove('view-hidden');
+          viewLanding.setAttribute('aria-hidden', 'false');
+
+          window.scrollTo({ top: 0, behavior: 'auto' });
+        }
+
+        startPlanningButtons.forEach(function (btn) {
+          btn.addEventListener('click', showAppShell);
+        });
+
+        backToLandingButtons.forEach(function (btn) {
+          btn.addEventListener('click', showLandingPage);
+        });
+
+        if (sidebarLogoHome) {
+          sidebarLogoHome.addEventListener('click', showLandingPage);
+        }
+
+        // ------------------------------------------------------------------
+        // 2. Landing Mobile Hamburger Menu
+        // ------------------------------------------------------------------
+        function closeMobileMenu() {
+          if (!mobileMenu || !hamburgerBtn) return;
+          mobileMenu.classList.remove('is-open');
+          hamburgerBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        if (hamburgerBtn && mobileMenu) {
+          hamburgerBtn.addEventListener('click', function () {
+            var isOpen = mobileMenu.classList.toggle('is-open');
+            hamburgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          });
+        }
+
+        mobileLinks.forEach(function (link) {
+          link.addEventListener('click', closeMobileMenu);
+        });
+
+        // ------------------------------------------------------------------
+        // 3. Interactive Event-Type Chips
+        // ------------------------------------------------------------------
+        function selectOccasion(occasionName) {
+          if (!EVENT_PRESETS[occasionName]) return;
+          currentOccasion = occasionName;
+
+          occasionChips.forEach(function (chip) {
+            var isSelected = chip.getAttribute('data-occasion') === occasionName;
+            chip.classList.toggle('is-active', isSelected);
+            chip.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+          });
+
+          var preset = EVENT_PRESETS[occasionName];
+          heroPreviewTitle.textContent = preset.title;
+          heroPreviewMeta.textContent = preset.meta;
+          heroPreviewDays.textContent = preset.days;
+          heroPreviewVenue.textContent = preset.venue;
+          heroPreviewDecor.textContent = preset.decor;
+          heroPreviewRsvp.textContent = preset.rsvp;
+        }
+
+        occasionChips.forEach(function (chip) {
+          chip.addEventListener('click', function () {
+            selectOccasion(chip.getAttribute('data-occasion'));
+          });
+        });
+
+        footerOccasionLinks.forEach(function (link) {
+          link.addEventListener('click', function () {
+            selectOccasion(link.getAttribute('data-footer-occasion'));
+          });
+        });
+
+        // ------------------------------------------------------------------
+        // 4. App Shell Tab Switching (Desktop Sidebar + Mobile Bottom Bar)
+        // ------------------------------------------------------------------
+        function activateTab(tabKey) {
+          // Update both sidebar and bottom-bar tab buttons
+          tabButtons.forEach(function (btn) {
+            var matches = btn.getAttribute('data-tab') === tabKey;
+            btn.classList.toggle('is-active', matches);
+            btn.setAttribute('aria-selected', matches ? 'true' : 'false');
+          });
+
+          // Show only the selected tab panel
+          tabPanels.forEach(function (panel) {
+            var matches = panel.id === 'panel-' + tabKey;
+            panel.classList.toggle('is-active', matches);
+          });
+        }
+
+        tabButtons.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            activateTab(btn.getAttribute('data-tab'));
+          });
+        });
+
+        // ------------------------------------------------------------------
+        // 5. Reminders Bell Popover
+        // ------------------------------------------------------------------
+        function closeReminders() {
+          if (!remindersPopover || !bellToggleBtn) return;
+          remindersPopover.classList.add('view-hidden');
+          bellToggleBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        if (bellToggleBtn && remindersPopover) {
+          bellToggleBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var isHidden = remindersPopover.classList.toggle('view-hidden');
+            bellToggleBtn.setAttribute('aria-expanded', isHidden ? 'false' : 'true');
+          });
+        }
+
+        if (closeRemindersBtn) {
+          closeRemindersBtn.addEventListener('click', closeReminders);
+        }
+
+        document.addEventListener('click', function (e) {
+          if (
+            remindersPopover &&
+            !remindersPopover.classList.contains('view-hidden') &&
+            !remindersPopover.contains(e.target) &&
+            e.target !== bellToggleBtn
+          ) {
+            closeReminders();
+          }
+        });
+
+        // ------------------------------------------------------------------
+        // 6. Scroll Fade-In Observer (with Reduced-Motion & Immediate Fallback)
+        // ------------------------------------------------------------------
+        var revealElements = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(
+            function (entries, obs) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  obs.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.12, rootMargin: '0px 0px -30px 0px' }
+          );
+
+          revealElements.forEach(function (el) {
+            observer.observe(el);
+          });
+        } else {
+          revealElements.forEach(function (el) {
+            el.classList.add('is-visible');
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
